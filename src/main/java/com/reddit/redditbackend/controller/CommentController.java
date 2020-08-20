@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comments/")
+@RequestMapping("/api/comments")
 public class CommentController {
     private final CommentService commentService;
 
@@ -19,8 +19,9 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comment> createComment(@RequestBody CommentsDto commentsDto) {
-        return new ResponseEntity<>(commentService.save(commentsDto), HttpStatus.CREATED);
+    public ResponseEntity<Void> createComment(@RequestBody CommentsDto commentsDto) {
+        commentService.save(commentsDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/by-post/{postId}")

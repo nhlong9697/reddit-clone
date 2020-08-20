@@ -4,8 +4,10 @@ import com.reddit.redditbackend.dto.CommentsDto;
 import com.reddit.redditbackend.model.Comment;
 import com.reddit.redditbackend.model.Post;
 import com.reddit.redditbackend.model.User;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+@Mapper(componentModel = "spring")
 public interface CommentMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "text", source = "commentsDto.text")

@@ -12,6 +12,7 @@ import com.reddit.redditbackend.repository.PostRepository;
 import com.reddit.redditbackend.repository.SubredditRepository;
 import com.reddit.redditbackend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,25 +26,24 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class PostService {
 
-    private final SubredditRepository subredditRepository;
-    private final AuthService authService;
-    private final PostMapper postMapper;
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private SubredditRepository subredditRepository;
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private PostMapper postMapper;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public PostService(SubredditRepository subredditRepository, AuthService authService, PostMapper postMapper, PostRepository postRepository, UserRepository userRepository) {
-        this.subredditRepository = subredditRepository;
-        this.authService = authService;
-        this.postMapper = postMapper;
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-    }
 
-    public Post save(PostRequest postRequest) {
+
+    public void save(PostRequest postRequest) {
         Subreddit subreddit = subredditRepository.findByName(postRequest.getSubredditName())
                 .orElseThrow(() -> new SubredditNotFoundException(postRequest.getSubredditName()));
         User currentUser = authService.getCurrentUser();
-        return postRepository.save(postMapper.mapToPost(postRequest, subreddit, currentUser));
+        postRepository.save(postMapper.map(postRequest, subreddit, currentUser));
     }
 
     @Transactional(readOnly = true)

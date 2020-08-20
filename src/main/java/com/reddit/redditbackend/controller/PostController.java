@@ -20,8 +20,9 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody PostRequest postRequest) {
-        return new ResponseEntity<>(postService.save(postRequest), HttpStatus.CREATED);
+    public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
+        postService.save(postRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
 
@@ -30,7 +31,7 @@ public class PostController {
         return new ResponseEntity<>(postService.getPost(id), HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts() {
         return new ResponseEntity<>(postService.getAllPosts(),HttpStatus.OK);
     }
