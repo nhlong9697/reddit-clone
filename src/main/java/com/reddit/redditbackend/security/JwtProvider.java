@@ -13,12 +13,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.time.Instant;
+import java.util.Date;
+
+import static java.util.Date.from;
 
 @Service
 public class JwtProvider {
     private KeyStore keyStore;
     @Value("${jwt.keystore.password}")
     private String keyStorePassword;
+
+
+    @Value("${jwt.expiration.time}")
+    private Long jwtExpirationInMillis;
 
     @PostConstruct
     public void init() {
@@ -32,7 +40,12 @@ public class JwtProvider {
     }
     public String generateToken(Authentication authentication) {
         User principle = (User) authentication.getPrincipal();
-        return Jwts.builder().setSubject(principle.getUsername()).signWith(getPrivateKey()).compact();
+        return Jwts.builder()
+                .setSubject(principle.getUsername())
+                .setIssuedAt(from(Instant.now()))
+                .signWith(getPrivateKey())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
+                .compact();
     }
 
     private PrivateKey getPrivateKey() {
@@ -60,5 +73,18 @@ public class JwtProvider {
     public String getUsernameFromJwt(String token) {
         Claims claims = Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    public Long getJwtExpirationInMillis() {
+        return jwtExpirationInMillis;
+    }
+
+    public String generateTokenWithUserName(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(from(Instant.now()))
+                .signWith(getPrivateKey())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
+                .compact();
     }
 }

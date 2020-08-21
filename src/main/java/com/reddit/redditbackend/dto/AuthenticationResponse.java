@@ -1,23 +1,30 @@
 package com.reddit.redditbackend.dto;
 
+import java.time.Instant;
+
 public class AuthenticationResponse {
-    private String authenticationToke;
+    private String authenticationToken;
+    private String refreshToken;
+    private Instant expiresAt;
     private String username;
 
     public AuthenticationResponse() {
     }
 
-    public AuthenticationResponse(String authenticationToke, String username) {
-        this.authenticationToke = authenticationToke;
+    public AuthenticationResponse(String authenticationToken, String refreshToken,
+                                  Instant expiresAt, String username ) {
+        this.authenticationToken = authenticationToken;
+        this.refreshToken = refreshToken;
+        this.expiresAt = expiresAt;
         this.username = username;
     }
 
-    public String getAuthenticationToke() {
-        return authenticationToke;
+    public String getAuthenticationToken() {
+        return authenticationToken;
     }
 
-    public void setAuthenticationToke(String authenticationToke) {
-        this.authenticationToke = authenticationToke;
+    public void setAuthenticationToken(String authenticationToken) {
+        this.authenticationToken = authenticationToken;
     }
 
     public String getUsername() {
@@ -26,5 +33,21 @@ public class AuthenticationResponse {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
     }
 }
