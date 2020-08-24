@@ -19,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .exposedHeaders("Authorization")
                 .allowCredentials(true);
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
