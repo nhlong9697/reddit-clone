@@ -15,15 +15,19 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -95,6 +99,12 @@ public class AuthService {
         );
         SecurityContextHolder.getContext().setAuthentication(authenticatingObject);
         String token = jwtProvider.generateToken(authenticatingObject);
+        UserDetails userDetails =
+                (UserDetails) authenticatingObject.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
         String refreshToken = refreshTokenService.generateRefreshToken().getToken();
         Instant expiresAt = Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis());
         String userName = loginRequest.getUsername();
@@ -102,7 +112,8 @@ public class AuthService {
     }
     @Transactional(readOnly = true)
     public User getCurrentUser() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+        org.springframework.security.core.userdetails.User principal = 
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.
                 getContext().getAuthentication().getPrincipal();
         return userRepository.findByUsername(principal.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
