@@ -20,7 +20,7 @@ public class Comment {
     private Instant createdDate;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private User user;
+    private AppUser appUser;
 
     public Comment() {
     }
@@ -57,11 +57,11 @@ public class Comment {
         this.createdDate = createdDate;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }

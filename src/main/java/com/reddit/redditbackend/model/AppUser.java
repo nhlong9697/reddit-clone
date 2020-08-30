@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-public class User {
+public class AppUser {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long userId;
@@ -26,7 +26,7 @@ public class User {
     private Instant created;
     private boolean enabled;
 
-    public User() {
+    public AppUser() {
     }
 
     public Long getUserId() {

@@ -1,6 +1,6 @@
 package com.reddit.redditbackend.service;
 
-import com.reddit.redditbackend.model.User;
+import com.reddit.redditbackend.model.AppUser;
 import com.reddit.redditbackend.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,14 +28,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional(readOnly = true)
     //load user framework type by user name
     public UserDetails loadUserByUsername(String username) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        User user = userOptional
-                .orElseThrow(() -> new UsernameNotFoundException("No user " +
+        Optional<AppUser> userOptional = userRepository.findByUsername(username);
+        AppUser appUser = userOptional
+                .orElseThrow(() -> new UsernameNotFoundException("No appUser " +
                         "Found with username : " + username));
 
         return new org.springframework.security
-                .core.userdetails.User(user.getUsername(), user.getPassword(),
-                user.isEnabled(), true, true,
+                .core.userdetails.User(appUser.getUsername(), appUser.getPassword(),
+                appUser.isEnabled(), true, true,
                 true, getAuthorities("USER"));
     }
 

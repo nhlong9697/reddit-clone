@@ -15,7 +15,7 @@ public class VerificationToken {
     private Long id;
     private String token;
     @OneToOne(fetch = LAZY)
-    private User user;
+    private AppUser appUser;
     private Instant expiryDate;
 
     public VerificationToken() {
@@ -37,12 +37,12 @@ public class VerificationToken {
         this.token = token;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public Instant getExpiryDate() {

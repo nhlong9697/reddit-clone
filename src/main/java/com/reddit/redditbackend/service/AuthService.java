@@ -5,8 +5,8 @@ import com.reddit.redditbackend.dto.LoginRequest;
 import com.reddit.redditbackend.dto.RefreshTokenRequest;
 import com.reddit.redditbackend.dto.RegisterRequest;
 import com.reddit.redditbackend.exception.SpringRedditException;
+import com.reddit.redditbackend.model.AppUser;
 import com.reddit.redditbackend.model.NotificationEmail;
-import com.reddit.redditbackend.model.User;
 import com.reddit.redditbackend.model.VerificationToken;
 import com.reddit.redditbackend.repository.UserRepository;
 import com.reddit.redditbackend.repository.VerificationTokenRepository;
@@ -16,19 +16,15 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -54,29 +50,29 @@ public class AuthService {
     private String BACKEND_API;
     @Transactional
     public void signup(RegisterRequest registerRequest) {
-        User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setCreated(Instant.now());
-        user.setEnabled(false);
+        AppUser appUser = new AppUser();
+        appUser.setUsername(registerRequest.getUsername());
+        appUser.setEmail(registerRequest.getEmail());
+        appUser.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        appUser.setCreated(Instant.now());
+        appUser.setEnabled(false);
 
-        userRepository.save(user);
+        userRepository.save(appUser);
 
-        String token = generateVerificationToken(user);
+        String token = generateVerificationToken(appUser);
         mailService.sendMail(new NotificationEmail("Please Activate your account",
-                user.getEmail(), "Thank you for signing up, please click on the below url to " +
+                appUser.getEmail(), "Thank you for signing up, please click on the below url to " +
                 "active your account : "
                 + BACKEND_API
                 + "api/auth/accountVerification/"
                 + token));
     }
 
-    private String generateVerificationToken(User user) {
+    private String generateVerificationToken(AppUser appUser) {
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
-        verificationToken.setUser(user);
+        verificationToken.setUser(appUser);
         verificationTokenRepository.save(verificationToken);
         return token;
     }
@@ -90,11 +86,11 @@ public class AuthService {
 
     private void enableUserByToken(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
-        User user =
+        AppUser appUser =
                 userRepository.findByUsername(username).orElseThrow(() -> new SpringRedditException(
-                "User not found with name - " + username));
-        user.setEnabled(true);
-        userRepository.save(user);
+                "AppUser not found with name - " + username));
+        appUser.setEnabled(true);
+        userRepository.save(appUser);
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
@@ -111,12 +107,12 @@ public class AuthService {
         return new AuthenticationResponse(token, refreshToken,expiresAt, userName);
     }
     @Transactional(readOnly = true)
-    public User getCurrentUser() {
+    public AppUser getCurrentUser() {
         org.springframework.security.core.userdetails.User principal = 
                 (org.springframework.security.core.userdetails.User) SecurityContextHolder.
                 getContext().getAuthentication().getPrincipal();
         return userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
+                .orElseThrow(() -> new UsernameNotFoundException("AppUser name not found - " + principal.getUsername()));
     }
 
     public boolean isLoggedIn() {

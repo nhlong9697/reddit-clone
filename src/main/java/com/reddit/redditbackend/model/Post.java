@@ -26,7 +26,7 @@ public class Post {
     private Integer voteCount = 0;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private User user;
+    private AppUser appUser;
     private Instant createdDate;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "id", referencedColumnName = "id")
@@ -77,12 +77,12 @@ public class Post {
         this.voteCount = voteCount;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public Instant getCreatedDate() {

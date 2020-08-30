@@ -3,10 +3,10 @@ package com.reddit.redditbackend.service;
 import com.reddit.redditbackend.dto.CommentsDto;
 import com.reddit.redditbackend.exception.PostNotFoundException;
 import com.reddit.redditbackend.mapper.CommentMapper;
+import com.reddit.redditbackend.model.AppUser;
 import com.reddit.redditbackend.model.Comment;
 import com.reddit.redditbackend.model.NotificationEmail;
 import com.reddit.redditbackend.model.Post;
-import com.reddit.redditbackend.model.User;
 import com.reddit.redditbackend.repository.CommentRepository;
 import com.reddit.redditbackend.repository.PostRepository;
 import com.reddit.redditbackend.repository.UserRepository;
@@ -47,9 +47,9 @@ public class CommentService {
         sendCommentNotification(message, post.getUser());
     }
 
-    private void sendCommentNotification(String message, User user) {
-        mailService.sendMail(new NotificationEmail(user.getUsername() + "Commented your post",
-                user.getEmail(), message));
+    private void sendCommentNotification(String message, AppUser appUser) {
+        mailService.sendMail(new NotificationEmail(appUser.getUsername() + "Commented your post",
+                appUser.getEmail(), message));
     }
 
     public List<CommentsDto> getAllCommentsForPost(Long postId) {
@@ -64,11 +64,11 @@ public class CommentService {
     }
 
     public List<CommentsDto> getAllCommentsForUser(String userName) {
-        User user =
+        AppUser appUser =
                 userRepository.findByUsername(userName)
                         .orElseThrow(() -> new UsernameNotFoundException(userName));
         return commentRepository.
-                findAllByUser(user)
+                findAllByUser(appUser)
                 .stream()
                 .map(commentMapper::mapToDto)
                 .collect(Collectors.toList());

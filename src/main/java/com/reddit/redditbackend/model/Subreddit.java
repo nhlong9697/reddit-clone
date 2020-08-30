@@ -2,9 +2,6 @@ package com.reddit.redditbackend.model;
 
 
 
-import lombok.Builder;
-import lombok.Data;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -27,7 +24,7 @@ public class Subreddit {
     private List<Post> posts;
     private Instant createdDate;
     @ManyToOne(fetch = LAZY)
-    private User user;
+    private AppUser appUser;
 
     public Subreddit() {
     }
@@ -72,11 +69,11 @@ public class Subreddit {
         this.createdDate = createdDate;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }

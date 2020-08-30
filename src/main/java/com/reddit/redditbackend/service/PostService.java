@@ -7,7 +7,7 @@ import com.reddit.redditbackend.exception.SubredditNotFoundException;
 import com.reddit.redditbackend.mapper.PostMapper;
 import com.reddit.redditbackend.model.Post;
 import com.reddit.redditbackend.model.Subreddit;
-import com.reddit.redditbackend.model.User;
+import com.reddit.redditbackend.model.AppUser;
 import com.reddit.redditbackend.repository.PostRepository;
 import com.reddit.redditbackend.repository.SubredditRepository;
 import com.reddit.redditbackend.repository.UserRepository;
@@ -42,8 +42,8 @@ public class PostService {
     public void save(PostRequest postRequest) {
         Subreddit subreddit = subredditRepository.findByName(postRequest.getSubredditName())
                 .orElseThrow(() -> new SubredditNotFoundException(postRequest.getSubredditName()));
-        User currentUser = authService.getCurrentUser();
-        postRepository.save(postMapper.map(postRequest, subreddit, currentUser));
+        AppUser currentAppUser = authService.getCurrentUser();
+        postRepository.save(postMapper.map(postRequest, subreddit, currentAppUser));
     }
 
     @Transactional(readOnly = true)
@@ -71,8 +71,8 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponse> getPostsByUsername(String username) {
-        User user =
+        AppUser appUser =
                 userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
-        return postRepository.findByUser(user).stream().map(postMapper::mapToDto).collect(Collectors.toList());
+        return postRepository.findByUser(appUser).stream().map(postMapper::mapToDto).collect(Collectors.toList());
     }
 }
