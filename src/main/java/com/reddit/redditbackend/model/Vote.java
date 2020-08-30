@@ -49,7 +49,6 @@ public class Vote {
         this.post = post;
     }
 
-
     public AppUser getAppUser() {
         return appUser;
     }
