@@ -11,6 +11,7 @@ import com.reddit.redditbackend.model.VerificationToken;
 import com.reddit.redditbackend.repository.UserRepository;
 import com.reddit.redditbackend.repository.VerificationTokenRepository;
 import com.reddit.redditbackend.security.JwtProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,7 +50,8 @@ public class AuthService {
         this.verificationTokenRepository = verificationTokenRepository1;
         this.refreshTokenService = refreshTokenService;
     }
-
+    @Value("${backend.api}")
+    private String BACKEND_API;
     @Transactional
     public void signup(RegisterRequest registerRequest) {
         User user = new User();
@@ -64,7 +66,10 @@ public class AuthService {
         String token = generateVerificationToken(user);
         mailService.sendMail(new NotificationEmail("Please Activate your account",
                 user.getEmail(), "Thank you for signing up, please click on the below url to " +
-                "active your account : " + "http://localhost:8080/api/auth/accountVerification/"+token));
+                "active your account : "
+                + BACKEND_API
+                + "api/auth/accountVerification/"
+                + token));
     }
 
     private String generateVerificationToken(User user) {
