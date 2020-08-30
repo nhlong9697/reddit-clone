@@ -43,8 +43,9 @@ public class CommentService {
         Comment comment = commentMapper.map(commentsDto, post, authService.getCurrentUser());
         commentRepository.save(comment);
 
-        String message = mailContentBuilder.build(post.getUser().getUsername() + " posted a comment on your post." + POST_URL);
-        sendCommentNotification(message, post.getUser());
+        String message = mailContentBuilder.build(post.getAppUser().getUsername() + " posted a comment " +
+                "on your post." + POST_URL);
+        sendCommentNotification(message, post.getAppUser());
     }
 
     private void sendCommentNotification(String message, AppUser appUser) {
@@ -68,7 +69,7 @@ public class CommentService {
                 userRepository.findByUsername(userName)
                         .orElseThrow(() -> new UsernameNotFoundException(userName));
         return commentRepository.
-                findAllByUser(appUser)
+                findAllByAppUser(appUser)
                 .stream()
                 .map(commentMapper::mapToDto)
                 .collect(Collectors.toList());

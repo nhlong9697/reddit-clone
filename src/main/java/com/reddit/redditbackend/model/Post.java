@@ -77,13 +77,7 @@ public class Post {
         this.voteCount = voteCount;
     }
 
-    public AppUser getUser() {
-        return appUser;
-    }
 
-    public void setUser(AppUser appUser) {
-        this.appUser = appUser;
-    }
 
     public Instant getCreatedDate() {
         return createdDate;
@@ -99,5 +93,13 @@ public class Post {
 
     public void setSubreddit(Subreddit subreddit) {
         this.subreddit = subreddit;
+    }
+
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }

@@ -72,7 +72,7 @@ public class AuthService {
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
-        verificationToken.setUser(appUser);
+        verificationToken.setAppUser(appUser);
         verificationTokenRepository.save(verificationToken);
         return token;
     }
@@ -85,7 +85,7 @@ public class AuthService {
     }
 
     private void enableUserByToken(VerificationToken verificationToken) {
-        String username = verificationToken.getUser().getUsername();
+        String username = verificationToken.getAppUser().getUsername();
         AppUser appUser =
                 userRepository.findByUsername(username).orElseThrow(() -> new SpringRedditException(
                 "AppUser not found with name - " + username));

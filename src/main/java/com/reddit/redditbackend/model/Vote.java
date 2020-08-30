@@ -49,11 +49,12 @@ public class Vote {
         this.post = post;
     }
 
-    public AppUser getUser() {
+
+    public AppUser getAppUser() {
         return appUser;
     }
 
-    public void setUser(AppUser appUser) {
+    public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
     }
 }

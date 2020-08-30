@@ -37,13 +37,7 @@ public class VerificationToken {
         this.token = token;
     }
 
-    public AppUser getUser() {
-        return appUser;
-    }
 
-    public void setUser(AppUser appUser) {
-        this.appUser = appUser;
-    }
 
     public Instant getExpiryDate() {
         return expiryDate;
@@ -51,5 +45,13 @@ public class VerificationToken {
 
     public void setExpiryDate(Instant expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }

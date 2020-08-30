@@ -36,7 +36,7 @@ public abstract class PostMapper {
 
     @Mapping(target = "id", source = "postId")
     @Mapping(target = "subredditName", source = "subreddit.name")
-    @Mapping(target = "userName", source = "user.username")
+    @Mapping(target = "userName", source = "appUser.username")
     @Mapping(target = "commentCount", expression = "java(commentCount(post))")
     @Mapping(target = "duration", expression = "java(getDuration(post))")
     @Mapping(target = "upVote", expression = "java(isPostUpVoted(post))")
@@ -62,7 +62,7 @@ public abstract class PostMapper {
     private boolean checkVoteType(Post post, VoteType voteType) {
         if (authService.isLoggedIn()) {
             Optional<Vote> voteForPostByUser =
-                    voteRepository.findTopByPostAndUserOrderByVoteIdDesc(post,
+                    voteRepository.findTopByPostAndAppUserOrderByVoteIdDesc(post,
                             authService.getCurrentUser());
             return voteForPostByUser.filter(vote -> vote.getVoteType().equals(voteType))
                     .isPresent();

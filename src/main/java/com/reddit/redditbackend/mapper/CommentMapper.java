@@ -18,6 +18,6 @@ public interface CommentMapper {
 
     //TODO: test post.id and user.username
     @Mapping(target = "postId", expression = "java(comment.getPost().getPostId())")
-    @Mapping(target = "userName", expression = "java(comment.getUser().getUsername())")
+    @Mapping(target = "userName", expression = "java(comment.getAppUser().getUsername())")
     CommentsDto mapToDto(Comment comment);
 }
