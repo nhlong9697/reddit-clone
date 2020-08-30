@@ -99,11 +99,6 @@ public class AuthService {
         );
         SecurityContextHolder.getContext().setAuthentication(authenticatingObject);
         String token = jwtProvider.generateToken(authenticatingObject);
-        UserDetails userDetails =
-                (UserDetails) authenticatingObject.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
 
         String refreshToken = refreshTokenService.generateRefreshToken().getToken();
         Instant expiresAt = Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis());
